@@ -61,10 +61,22 @@ CREATE OR REPLACE TYPE airline_type IS OBJECT (
     managed_by REF airline_agent_type 
 );
 
-CREATE OR REPLACE TYPE trip_type IS OBJECT (
-    class_type CHAR, 
-    hotline VARCHAR(13),
+CREATE OR REPLACE TYPE aircraft_type IS OBJECT (
+    craft_num INT,
+    num_of_Seats INT, 
+    model VARCHAR(20),
     belong_to REF airline_type
+);
+
+CREATE OR REPLACE TYPE trip_type IS OBJECT (
+    trip_id INT,
+    class_type CHAR, 
+    departure_loc VARCHAR(5),
+    destination_loc VARCHAR(5),
+    departure_time VARCHAR(8),
+    arrival_time VARCHAR(8),
+    trip_fare FLOAT,
+    offered_by REF airline_type
 );
 
 CREATE OR REPLACE TYPE manager_type UNDER person_type (
