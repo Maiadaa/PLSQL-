@@ -1,0 +1,86 @@
+/* TYPES */
+CREATE TYPE name_type AS OBJECT (
+    FName VARCHAR(20), 
+    LName VARCHAR(20)
+);
+
+CREATE OR REPLACE TYPE add_type AS OBJECT (
+    city VARCHAR(20), 
+    country VARCHAR(20)
+);
+
+CREATE OR REPLACE TYPE person_type IS OBJECT (
+    id NUMBER, 
+    name name_type,
+    gender CHAR,
+    email VARCHAR(20),
+    phone_num VARCHAR(13),
+    address add_type
+)NOT FINAL;
+
+CREATE OR REPLACE TYPE vehicle_agent_type UNDER person_type (
+    agency_id NUMBER
+);
+
+CREATE OR REPLACE TYPE vehicle_type IS OBJECT (
+    plate_num VARCHAR(6), 
+    model_name VARCHAR(20),
+    color VARCHAR(20),
+    model_year INT,
+    rental_price FLOAT, 
+    managed_by REF vehicle_agent_type 
+);
+
+CREATE OR REPLACE TYPE hotel_agent_type UNDER person_typee (
+    role VARCHAR(20)
+);
+
+CREATE OR REPLACE TYPE hotel_type IS OBJECT (
+    hotel_id NUMBER, 
+    rating FLOAT,
+    phone_num VARCHAR(13),
+    hotel_name VARCHAR(20),
+    hotel_address add_type, 
+    managed_by REF hotel_agent_type 
+);
+
+CREATE OR REPLACE TYPE room_type IS OBJECT (
+    room_id NUMBER, 
+    price FLOAT,
+    room_num  INT,
+    found_in REF hotel_type 
+);
+
+CREATE OR REPLACE TYPE airline_agent_type UNDER person_type (
+    office_loc add_type
+);
+
+CREATE OR REPLACE TYPE airline_type IS OBJECT (
+    airline_name VARCHAR(20), 
+    hotline VARCHAR(13),
+    managed_by REF airline_agent_type 
+);
+
+CREATE OR REPLACE TYPE trip_type IS OBJECT (
+    class_type CHAR, 
+    hotline VARCHAR(13),
+    belong_to REF airline_type
+);
+
+CREATE OR REPLACE TYPE manager_type UNDER person_type (
+    salary FLOAT
+);
+
+CREATE OR REPLACE TYPE user_type UNDER person_type (
+    credit_card_num VARCHAR(12) 
+);
+
+/* TABLES */
+
+CREATE TABLE user OF user_type(
+    CONSTRAINT user_pk PRIMARY KEY(id)
+);
+
+/* INSERTIONS */
+
+INSERT INTO user VALUES ('1', name_type('maiada', 'khaled'), 'F', 'maiada', '+201010', add_type('newCairo', 'Egypt'), '5555');
