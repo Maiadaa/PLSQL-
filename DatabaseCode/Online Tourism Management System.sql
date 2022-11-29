@@ -10,7 +10,7 @@ CREATE OR REPLACE TYPE add_type AS OBJECT (
 );
 
 CREATE OR REPLACE TYPE person_type IS OBJECT (
-    person_id NUMBER, 
+    person_id number, 
     person_name name_type,
     gender CHAR,
     email VARCHAR(20),
@@ -19,7 +19,7 @@ CREATE OR REPLACE TYPE person_type IS OBJECT (
 )NOT FINAL;
 
 CREATE OR REPLACE TYPE vehicle_agent_type UNDER person_type (
-    agency_id NUMBER
+    agency_id number
 );
 
 CREATE OR REPLACE TYPE vehicle_type IS OBJECT (
@@ -36,7 +36,7 @@ CREATE OR REPLACE TYPE hotel_agent_type UNDER person_type (
 );
 
 CREATE OR REPLACE TYPE hotel_type IS OBJECT (
-    hotel_id NUMBER, 
+    hotel_id int, 
     rating FLOAT,
     phone_num VARCHAR(13),
     hotel_name VARCHAR(20),
@@ -45,7 +45,7 @@ CREATE OR REPLACE TYPE hotel_type IS OBJECT (
 );
 
 CREATE OR REPLACE TYPE room_type IS OBJECT (
-    room_id NUMBER, 
+    room_id int, 
     price FLOAT,
     room_num  INT,
     found_in REF hotel_type
@@ -176,6 +176,7 @@ CREATE TABLE tripBooking OF user_trip_type(
     trip_ref SCOPE IS trip NOT NULL
 );
 
+
 CREATE TABLE hotel OF hotel_type(
    Constraint Hotel_Pk1 Primary Key(Hotel_Id),
    managed_by SCOPE IS hotel_agent NOT NULL
@@ -203,6 +204,7 @@ CREATE TABLE vehicleRental OF user_vehicle_type(
     vehicle_ref SCOPE IS vehicle NOT NULL
 );
 
+
 /* INSERTIONS */
 /* Order of insertions:
    maiada:
@@ -211,21 +213,22 @@ CREATE TABLE vehicleRental OF user_vehicle_type(
    	hotel agents 
    	vehicle agents 
    assem:
-	airline agents 
-   	airline 
+	hotel 
+   	landing 
    	trip
    	airport
    Hagrass: 
 	aircraft 
-   	landing 
+    airline
    	tripBooking
-   	hotel 
+    airline agent
    Fahmy:
 	room
    	roomReservation
   	vehicle 
    	vehicleRental 
-*/
+/*
+/*INSERT INTO user VALUES ('1', name_type('maiada', 'khaled'), 'F', 'maiada', '+201010', add_type('newCairo', 'Egypt'), '5555');*/
 /*users*/
 Insert Into User_tbl Values ('1', Name_Type('Maiada', 'Khaled'), 'F', 'maiada@aol.com', '+201010101010', Add_Type('newCairo', 'Egypt'), '1111 1111');
 INSERT INTO User_tbl VALUES ('2', name_type('Karim', 'Mohsen'), 'M', 'karim@yahoo.com', '+201111111111', add_type('Alex', 'Egypt'), '5555 5555');
@@ -243,19 +246,62 @@ Insert Into vehicle_Agent Values ('7', Name_Type('Islam', 'Saad'), 'M', 'islam@g
 Insert Into vehicle_Agent Values ('8', Name_Type('Sara', 'Hesham'), 'F', 'ziad@aol.com', '+201277777777', Add_Type('October', 'Egypt'), '2');
 
 /*ariline agents*/
+INSERT INTO airline_agent VALUES (1, name_type('maiada', 'khaled'), 'F', 'maiada@gmail', '10101303', add_type('Cairo', 'Egypt'),add_type('Cairo', 'Egypt'));
+INSERT INTO airline_agent VALUES (2, name_type('abdelrahman', 'hagrass'), 'M', 'hagrass@gmail', '10101303', add_type('Cairo', 'Egypt'),add_type('Cairo', 'Egypt'));
+INSERT INTO airline_agent VALUES (3, name_type('mahmoud', 'assem'), 'm', 'assem@gmail', '10101303', add_type('Cairo', 'Egypt'),add_type('Cairo', 'Egypt'));
+INSERT INTO airline_agent VALUES (4, name_type('hagrass', 'abdelrahman'), 'M', 'abdelrahman@gmail', '10101303', add_type('Cairo', 'Egypt'),add_type('Cairo', 'Egypt'));
+INSERT INTO airline_agent VALUES (5, name_type('mahmoud', 'medhat'), 'M', 'medhat@gmail', '10101303', add_type('Cairo', 'Egypt'),add_type('Cairo', 'Egypt'));
+INSERT INTO airline_agent VALUES (6, name_type('manar', 'hossam'), 'F', 'manar@gmail', '10101303', add_type('Cairo', 'Egypt'),add_type('Cairo', 'Egypt'));
+INSERT INTO airline_agent VALUES (7, name_type('shahd', 'khaled'), 'F', 'shahd@gmail', '10101303', add_type('Cairo', 'Egypt'),add_type('Cairo', 'Egypt'));
+INSERT INTO airline_agent VALUES (8, name_type('mohamed', 'khaled'), 'M', 'mohamed@gmail', '10101303', add_type('Cairo', 'Egypt'),add_type('Cairo', 'Egypt'));
 
 /*airlines*/
+INSERT INTO airline select (airline_type('Egyptair', 'public', add_type('Cairo', 'Egypt'), 'EgyptAir@air.com@', '01013700990', ref(HisAgent))) 
+from airline_agent HisAgent where HisAgent.person_id = 2;
+INSERT INTO airline select (airline_type('Alaska', 'public', add_type('Cairo', 'Egypt'), 'Alaska@air.com@', '123456789', ref(HisAgent))) 
+from airline_agent HisAgent where HisAgent.person_id = 1;
+INSERT INTO airline select (airline_type('American', 'public', add_type('Cairo', 'Egypt'), 'American@air.com@', '321654987', ref(HisAgent))) 
+from airline_agent HisAgent where HisAgent.person_id = 3;
+INSERT INTO airline select (airline_type('United', 'public', add_type('Cairo', 'Egypt'), 'United@air.com@', '987654321', ref(HisAgent))) 
+from airline_agent HisAgent where HisAgent.person_id = 4;
+INSERT INTO airline select (airline_type('Delta', 'public', add_type('Cairo', 'Egypt'), 'Delta@air.com@', '019584848', ref(HisAgent))) 
+from airline_agent HisAgent where HisAgent.person_id = 5;
+INSERT INTO airline select (airline_type('Allegiant', 'public', add_type('Cairo', 'Egypt'), 'Allegiant@air.com@', '012924123', ref(HisAgent))) 
+from airline_agent HisAgent where HisAgent.person_id = 6;
+INSERT INTO airline select (airline_type('Spirit', 'public', add_type('Cairo', 'Egypt'), 'Spirit@air.com@', '0123643434', ref(HisAgent))) 
+from airline_agent HisAgent where HisAgent.person_id = 7;
+INSERT INTO airline select (airline_type('Grant Aviation', 'public', add_type('Cairo', 'Egypt'), 'Grant_Aviation@air.com@', '9876736743', ref(HisAgent))) 
+from airline_agent HisAgent where HisAgent.person_id = 8;
 
 /*trips*/
 
 /*airports*/
 
 /*aircrafts*/
+INSERT INTO aircraft select (aircraft_type(1, 'Traveler', 2013, 'AERONCA', 300, ref(air)))
+from airline air where air.airline_name = 'Egyptair' and air.phone_num = '01013700990';
+INSERT INTO aircraft select (aircraft_type(2, 'Citabria', 2018, 'BELLANCA', 500, ref(air)))
+from airline air where air.airline_name = 'Alaska' and air.phone_num = '123456789';
+INSERT INTO aircraft select (aircraft_type(3, 'Tri-Traveler', 2017, 'CHAMPION', 200, ref(air)))
+from airline air where air.airline_name = 'American' and air.phone_num = '321654987';
+INSERT INTO aircraft select (aircraft_type(4, 'Sky-Trac', 2015, 'CHAMPION', 350, ref(air)))
+from airline air where air.airline_name = 'United' and air.phone_num = '987654321';
+INSERT INTO aircraft select (aircraft_type(5, 'Master', 2016, ' LUSCOMBE', 250, ref(air)))
+from airline air where air.airline_name = 'Delta' and air.phone_num = '019584848';
+INSERT INTO aircraft select (aircraft_type(6, 'Colibri', 2014, 'NEW HORIZONS', 550, ref(air)))
+from airline air where air.airline_name = 'Allegiant' and air.phone_num = '012924123';
+INSERT INTO aircraft select (aircraft_type(7, 'Albertan', 2011, 'ULTIMATE', 100, ref(air)))
+from airline air where air.airline_name = 'Spirit' and air.phone_num = '0123643434';
+INSERT INTO aircraft select (aircraft_type(8, 'Voyager', 2018, 'STINSON', 150, ref(air)))
+from airline air where air.airline_name = 'Grant Aviation' and air.phone_num = '9876736743';
 
 /*landings*/
 
 /*tripBookings*/
-
+INSERT INTO tripBooking select (user_trip_type(1, ref(User), ref(Trip)))
+from User_Tbl User, trip Trip where User.person_id = 1 and Trip.Trip_Id = 1;
+INSERT INTO tripBooking select (user_trip_type(2, ref(User), ref(Trip)))
+from User_Tbl User, trip Trip where User.person_id = 2 and Trip.Trip_Id = 2;
 /*hotels*/
 
 /*rooms*/
@@ -265,3 +311,8 @@ Insert Into vehicle_Agent Values ('8', Name_Type('Sara', 'Hesham'), 'F', 'ziad@a
 /*vehicles*/
 
 /*vehicleRentals*/
+
+
+
+
+
