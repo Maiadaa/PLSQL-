@@ -275,6 +275,21 @@ from airline_agent HisAgent where HisAgent.person_id = 8;
 
 /*trips*/
 
+INSERT INTO trip select(trip_type(1,'B', 'Cairo' ,'Alex' ,'7:00AM' , '8:34AM' , 550, ref(air)))
+from airline air where air.airline_name = 'Egyptair' and air.phone_num = '01013700990';
+
+INSERT INTO trip select(trip_type(2,'F', 'HRG' ,'LUX' ,'10:00AM' , '8:34AM' , 1120, ref(air)))
+from airline air where air.airline_name = 'Alaska' and air.phone_num = '123456789';
+
+INSERT INTO trip select(trip_type(3,'E', 'Alex' ,'Cairo' ,'3:00PM' , '4:47AM' , 1050, ref(air)))
+from airline air where air.airline_name = 'American' and air.phone_num = '321654987';
+
+INSERT INTO trip select(trip_type(4,'E', 'Cairo' ,'HRG' ,'9:00AM' , '11:14AM' , 1550, ref(air)))
+from airline air where air.airline_name = 'United' and air.phone_num = '987654321';
+
+INSERT INTO trip select(trip_type(5,'F', 'Cairo' ,'LUX' ,'7:00AM' , '8:34AM' , 1785, ref(air)))
+from airline air where air.airline_name = 'Egyptair' and air.phone_num = '01013700990';
+
 /*airports*/
 
 /*aircrafts*/
@@ -298,10 +313,11 @@ from airline air where air.airline_name = 'Grant Aviation' and air.phone_num = '
 /*landings*/
 
 /*tripBookings*/
-INSERT INTO tripBooking select (user_trip_type(1, ref(User), ref(Trip)))
-from User_Tbl User, trip Trip where User.person_id = 1 and Trip.Trip_Id = 1;
-INSERT INTO tripBooking select (user_trip_type(2, ref(User), ref(Trip)))
-from User_Tbl User, trip Trip where User.person_id = 2 and Trip.Trip_Id = 2;
+INSERT INTO tripBooking select (user_trip_type(1, ref(User_ID), ref(Trip_ID)))
+from User_Tbl User_ID, trip Trip_ID where User_ID.person_id = 1 and Trip_ID.Trip_Id = 1;
+
+INSERT INTO tripBooking select (user_trip_type(2, ref(User_ID), ref(Trip_ID)))
+from User_Tbl User_ID, trip Trip_ID where User_ID.person_id = 2 and Trip_ID.Trip_Id = 2;
 /*hotels*/
 
 /*rooms*/
@@ -312,6 +328,38 @@ from User_Tbl User, trip Trip where User.person_id = 2 and Trip.Trip_Id = 2;
 
 /*vehicleRentals*/
 
+create or replace NONEDITIONABLE procedure Add_Hotel (hotel_id int, rating FLOAT, phone_num VARCHAR, hotel_name VARCHAR, city VARCHAR, country VARCHAR, managed_by number)is
+begin
+    if hotel_id > 0
+        then if rating is not null 
+            then if phone_num is not null
+                then if hotel_name is not null
+                    then if city is not null
+                        then if country is not null
+                            then if managed_by is not null
+                                then 
+                                    /*insert*/
+                                    insert into hotel select (hotel_type(hotel_id, rating, phone_num, hotel_name, add_type(city, country), ref(hotelAgent)))
+                                    from Hotel_Agent hotelAgent where hotelAgent.person_id = managed_by;
+                                    /*end*/
+                            else dbms_output.put_line('managed by must not be empty');
+                            end if;
+                        else dbms_output.put_line('country must not be empty');
+                        end if;
+                    else dbms_output.put_line('city must not be empty');
+                    end if;
+                else dbms_output.put_line('horel name must not be empty');
+                end if;
+            else dbms_output.put_line('phone_num must not be empty');
+            end if;
+        else dbms_output.put_line('rating must not be empty');
+        end if;
+    else dbms_output.put_line('Id must greater than zero');
+    end if;
+    exception 
+    when DUP_VAL_ON_INDEX  then dbms_output.put_line('error');
+
+end;
 
 
 
