@@ -1,4 +1,4 @@
-/**** TYPES ****/
+/* TYPES */
 CREATE OR REPLACE TYPE name_type AS OBJECT (
     FName VARCHAR(20), 
     LName VARCHAR(20)
@@ -127,7 +127,7 @@ CREATE OR REPLACE TYPE user_vehicle_type  AS OBJECT(
     total_price FLOAT
 );
 
-/**** TABLES ****/
+/* TABLES */
 
 CREATE TABLE user_tbl OF user_type(
     CONSTRAINT user_pk PRIMARY KEY(person_id)
@@ -205,25 +205,47 @@ CREATE TABLE vehicleRental OF user_vehicle_type(
 );
 
 
-/**** INSERTIONS ****/
-
-/* USERS */
+/* INSERTIONS */
+/* Order of insertions:
+   maiada:
+	users 
+  	managers
+   	hotel agents 
+   	vehicle agents 
+   assem:
+	hotel 
+   	landing 
+   	trip
+   	airport
+   Hagrass: 
+	aircraft 
+    airline
+   	tripBooking
+    airline agent
+   Fahmy:
+	room
+   	roomReservation
+  	vehicle 
+   	vehicleRental 
+/*
+/*INSERT INTO user VALUES ('1', name_type('maiada', 'khaled'), 'F', 'maiada', '+201010', add_type('newCairo', 'Egypt'), '5555');*/
+/*users*/
 Insert Into User_tbl Values ('1', Name_Type('Maiada', 'Khaled'), 'F', 'maiada@aol.com', '+201010101010', Add_Type('newCairo', 'Egypt'), '1111 1111');
 INSERT INTO User_tbl VALUES ('2', name_type('Karim', 'Mohsen'), 'M', 'karim@yahoo.com', '+201111111111', add_type('Alex', 'Egypt'), '5555 5555');
 
-/* MANAGERS*/
+/*managers*/
 Insert Into Manager Values ('3', Name_Type('Hassan', 'Kamal'), 'M', 'hassan@gmail.com', '+201122222222', Add_Type('Cairo', 'Egypt'), '15000');
 Insert Into manager Values ('4', Name_Type('Youssef', 'Wael'), 'M', 'Youssef@outlook.com', '+201133333333', Add_Type('Giza', 'Egypt'), '12000');
 
-/* HOTEL AGENTS */
+/*hotel agents*/
 Insert Into Hotel_Agent Values ('5', Name_Type('Mohamed', 'Diab'), 'M', 'mohamed@outlook.com', '+201044444444', Add_Type('AinSokhna', 'Egypt'), 'Receptionnist');
 Insert Into Hotel_Agent Values ('6', Name_Type('Ziad', 'Ali'), 'M', 'ziad@outlook.com', '+201055555555', Add_Type('AinSokhna', 'Egypt'), 'Customer service');
 
-/* VEHICLE AGENTS */
+/*vehicle agents*/
 Insert Into vehicle_Agent Values ('7', Name_Type('Islam', 'Saad'), 'M', 'islam@gmail.com', '+201266666666', Add_Type('October', 'Egypt'), '1');
 Insert Into vehicle_Agent Values ('8', Name_Type('Sara', 'Hesham'), 'F', 'ziad@aol.com', '+201277777777', Add_Type('October', 'Egypt'), '2');
 
-/* AIRLINE AGENTS */
+/*ariline agents*/
 INSERT INTO airline_agent VALUES (1, name_type('maiada', 'khaled'), 'F', 'maiada@gmail', '10101303', add_type('Cairo', 'Egypt'),add_type('Cairo', 'Egypt'));
 INSERT INTO airline_agent VALUES (2, name_type('abdelrahman', 'hagrass'), 'M', 'hagrass@gmail', '10101303', add_type('Cairo', 'Egypt'),add_type('Cairo', 'Egypt'));
 INSERT INTO airline_agent VALUES (3, name_type('mahmoud', 'assem'), 'm', 'assem@gmail', '10101303', add_type('Cairo', 'Egypt'),add_type('Cairo', 'Egypt'));
@@ -233,7 +255,7 @@ INSERT INTO airline_agent VALUES (6, name_type('manar', 'hossam'), 'F', 'manar@g
 INSERT INTO airline_agent VALUES (7, name_type('shahd', 'khaled'), 'F', 'shahd@gmail', '10101303', add_type('Cairo', 'Egypt'),add_type('Cairo', 'Egypt'));
 INSERT INTO airline_agent VALUES (8, name_type('mohamed', 'khaled'), 'M', 'mohamed@gmail', '10101303', add_type('Cairo', 'Egypt'),add_type('Cairo', 'Egypt'));
 
-/* AIRLINES */
+/*airlines*/
 INSERT INTO airline select (airline_type('Egyptair', 'public', add_type('Cairo', 'Egypt'), 'EgyptAir@air.com@', '01013700990', ref(HisAgent))) 
 from airline_agent HisAgent where HisAgent.person_id = 2;
 INSERT INTO airline select (airline_type('Alaska', 'public', add_type('Cairo', 'Egypt'), 'Alaska@air.com@', '123456789', ref(HisAgent))) 
@@ -251,34 +273,11 @@ from airline_agent HisAgent where HisAgent.person_id = 7;
 INSERT INTO airline select (airline_type('Grant Aviation', 'public', add_type('Cairo', 'Egypt'), 'Grant_Aviation@air.com@', '9876736743', ref(HisAgent))) 
 from airline_agent HisAgent where HisAgent.person_id = 8;
 
-/* TRIPS */
-INSERT INTO trip select(trip_type('1','B', 'Cairo' ,'Alex' ,'7:00AM' , '8:34AM' , 550, ref(air)))
-from airline air where air.airline_name = 'Egyptair' and air.phone_num = '01013700990';
+/*trips*/
 
-INSERT INTO trip select(trip_type(2,'F', 'HRG' ,'LUX' ,'10:00AM' , '8:34AM' , 1120, ref(air)))
-from airline air where air.airline_name = 'Alaska' and air.phone_num = '123456789';
+/*airports*/
 
-INSERT INTO trip select(trip_type(3,'E', 'Alex' ,'Cairo' ,'3:00PM' , '4:47AM' , 1050, ref(air)))
-from airline air where air.airline_name = 'American' and air.phone_num = '321654987';
-
-INSERT INTO trip select(trip_type(4,'E', 'Cairo' ,'HRG' ,'9:00AM' , '11:14AM' , 1550, ref(air)))
-from airline air where air.airline_name = 'United' and air.phone_num = '987654321';
-
-Insert Into Trip Select(Trip_Type(5,'F', 'Cairo' ,'LUX' ,'7:00AM' , '8:34AM' , 1785, Ref(Air)))
-From Airline Air Where Air.Airline_Name = 'Egyptair' And Air.Phone_Num = '01013700990';
-
-/* AIRPORTS */
-INSERT INTO airport VALUES (Add_Type('Cairo','Egypt') , 'Cairo Airport', 'EG-01');
-
-INSERT INTO airport VALUES (Add_Type('Cairo','Egypt') , 'Almaza Airport', 'EG-02');
-
-INSERT INTO airport VALUES (Add_Type('Hurghada','Egypt') , 'Hurghada  Airport', 'EG-03');
-
-INSERT INTO airport VALUES (Add_Type('Luxor','Egypt') , 'Luxor  Airport', 'EG-04');
-
-INSERT INTO airport VALUES (Add_Type('Alexandria','Egypt') , 'Borg Arab Airport', 'EG-05');
-
-/* AIRCRAFTS */
+/*aircrafts*/
 INSERT INTO aircraft select (aircraft_type(1, 'Traveler', 2013, 'AERONCA', 300, ref(air)))
 from airline air where air.airline_name = 'Egyptair' and air.phone_num = '01013700990';
 INSERT INTO aircraft select (aircraft_type(2, 'Citabria', 2018, 'BELLANCA', 500, ref(air)))
@@ -296,78 +295,24 @@ from airline air where air.airline_name = 'Spirit' and air.phone_num = '01236434
 INSERT INTO aircraft select (aircraft_type(8, 'Voyager', 2018, 'STINSON', 150, ref(air)))
 from airline air where air.airline_name = 'Grant Aviation' and air.phone_num = '9876736743';
 
-/* LANDINGS */
-INSERT INTO landing SELECT (aircraft_airport_type(ref(airc),ref(airp),'5/12/2022 - 5:04PM'))
-from aircraft airc , airport airp
-where airc.model_name = 'Traveler' and airp.code = 'EG-01';
+/*landings*/
 
-INSERT INTO landing SELECT (aircraft_airport_type(ref(airc),ref(airp),'7/12/2022 - 4:20PM'))
-from aircraft airc , airport airp
-where airc.model_name = 'Citabria' and airp.code = 'EG-02';
-
-INSERT INTO landing SELECT (aircraft_airport_type(ref(airc),ref(airp),'7/12/2022 - 8:19PM'))
-from aircraft airc , airport airp
-where airc.model_name = 'Tri-Traveler' and airp.code = 'EG-03';
-
-INSERT INTO landing SELECT (aircraft_airport_type(ref(airc),ref(airp),'15/12/2022 - 1:10PM'))
-from aircraft airc , airport airp
-where airc.model_name = 'Sky-Trac' and airp.code = 'EG-04';
-
-INSERT INTO landing SELECT (aircraft_airport_type(ref(airc),ref(airp),'02/01/2022 - 5:04PM'))
-from aircraft airc , airport airp
-Where Airc.Model_Name = 'Master' And Airp.Code = 'EG-05';
-
-/* TRIP BOOKINGS */
+/*tripBookings*/
 INSERT INTO tripBooking select (user_trip_type(1, ref(User), ref(Trip)))
-from User_Tbl User, trip T where User.person_id = 1 and T.Trip_Id = 1;
+from User_Tbl User, trip Trip where User.person_id = 1 and Trip.Trip_Id = 1;
 INSERT INTO tripBooking select (user_trip_type(2, ref(User), ref(Trip)))
-From User_Tbl User, Trip Trip Where User.Person_Id = 2 And Trip.Trip_Id = 2;
+from User_Tbl User, trip Trip where User.person_id = 2 and Trip.Trip_Id = 2;
+/*hotels*/
 
-/* HOTELS */
-insert into hotel select (hotel_type(2001, 4.5 , '0122222222', 'Radisson', add_type('Cairo', 'Egypt'), ref(hotelAgent)))
-from Hotel_Agent hotelAgent where hotelAgent.person_id = 5;
+/*rooms*/
 
-insert into hotel select (hotel_type(2002, 4.5 , '0122222222', 'Meridien', add_type('Hurghada', 'Egypt'), ref(hotelAgent)))
-from Hotel_Agent hotelAgent where hotelAgent.person_id = 6;
+/*roomReservations*/
 
-Insert Into Hotel Select (Hotel_Type(2003, 4.5 , '0122222222', 'Intercontinental', Add_Type('Cairo', 'Egypt'), Ref(Hotelagent)))
-from Hotel_Agent hotelAgent where hotelAgent.person_id = 7;
+/*vehicles*/
 
-/* ROOMS */
-
-/* ROOM RESERVATIONS */
-
-/* VEHICLES */
-
-/* VEHICLE RENTALS */
+/*vehicleRentals*/
 
 
 
-/**** FUNCTIONS ****/
-/* MAIADA */
-
-/* MAHMOUD */
-
-/* ABDELRAHMAN */
-
-/* MOHAMED */
-
-
-/**** PROCEDURES ****/
-/* MAIADA */
-
-/* MAHMOUD */
-
-/* ABDELRAHMAN */
-
-/* MOHAMED */
-
-
-/**** CALLIING BLOCK ****/
-Begin
- /*call functions/procedures here*/
- /* e.g. bookRoom(); */
- 
-END;
 
 
