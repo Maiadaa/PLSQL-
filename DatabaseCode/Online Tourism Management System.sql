@@ -379,7 +379,7 @@ from User_tbl UserV , vehicle VehicleV
 where UserV.person_id = '2' and VehicleV.plate_num = 'NSB827';
 
 
-/**** FUNCTIONS ****/
+/**** PROCEDURES ****/
 /* MAIADA */
 
 /* MAHMOUD */
@@ -419,8 +419,61 @@ begin
 end;
 /* MOHAMED */
 
+/* Add_Aircraft Procedure*/
+create or replace procedure Add_Aircraft (craft_num int, model_name varchar, model_year int, manifacturer varchar, capacity int, belong_to varchar)is
+begin
 
-/**** PROCEDURES ****/
+if craft_num > 0
+
+then if capacity > 0
+
+then
+
+INSERT INTO aircraft select (aircraft_type(craft_num, model_name, model_year, manifacturer, capacity,ref(air)))
+from airline air where air.airline_name = belong_to and air.phone_num = phone_num;
+
+else
+dbms_output.put_line('Craft number must be greater than 0');
+end if;
+
+else
+dbms_output.put_line('Capacity must be greater than 0');
+end if;
+
+exception 
+when dup_val_on_index
+then dbms_output.put_line('The value of the primary key already exists in the database');
+end;
+
+/* Add_Airport Procedure*/
+
+create or replace procedure Add_Airport (city varchar, country varchar, name varchar, code varchar)is
+begin
+
+if code > 0
+
+then if country is not null
+
+then
+
+INSERT INTO airport values (add_type(city, country) , name, code);
+
+else
+dbms_output.put_line('Code number must be greater than 0');
+end if;
+
+else
+dbms_output.put_line('Country field must not be empty');
+end if;
+
+exception 
+when dup_val_on_index
+then dbms_output.put_line('The value of the primary key already exists in the database');
+
+
+end;
+
+/**** FUNCTIONS ****/
 /* MAIADA */
 
 /* MAHMOUD */
