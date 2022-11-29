@@ -225,5 +225,43 @@ CREATE TABLE vehicleRental OF user_vehicle_type(
    	roomReservation
   	vehicle 
    	vehicleRental 
-/*
-/*INSERT INTO user VALUES ('1', name_type('maiada', 'khaled'), 'F', 'maiada', '+201010', add_type('newCairo', 'Egypt'), '5555');*/
+*/
+/*users*/
+Insert Into User_tbl Values ('1', Name_Type('Maiada', 'Khaled'), 'F', 'maiada@aol.com', '+201010101010', Add_Type('newCairo', 'Egypt'), '1111 1111');
+INSERT INTO User_tbl VALUES ('2', name_type('Karim', 'Mohsen'), 'M', 'karim@yahoo.com', '+201111111111', add_type('Alex', 'Egypt'), '5555 5555');
+
+/*managers*/
+Insert Into Manager Values ('3', Name_Type('Hassan', 'Kamal'), 'M', 'hassan@gmail.com', '+201122222222', Add_Type('Cairo', 'Egypt'), '15000');
+Insert Into manager Values ('4', Name_Type('Youssef', 'Wael'), 'M', 'Youssef@outlook.com', '+201133333333', Add_Type('Giza', 'Egypt'), '12000');
+
+/*hotel agents*/
+Insert Into Hotel_Agent Values ('5', Name_Type('Mohamed', 'Diab'), 'M', 'mohamed@outlook.com', '+201044444444', Add_Type('AinSokhna', 'Egypt'), 'Receptionnist');
+Insert Into Hotel_Agent Values ('6', Name_Type('Ziad', 'Ali'), 'M', 'ziad@outlook.com', '+201055555555', Add_Type('AinSokhna', 'Egypt'), 'Customer service');
+
+/*vehicle agents*/
+Insert Into vehicle_Agent Values ('7', Name_Type('Islam', 'Saad'), 'M', 'islam@gmail.com', '+201266666666', Add_Type('October', 'Egypt'), '1');
+Insert Into vehicle_Agent Values ('8', Name_Type('Sara', 'Hesham'), 'F', 'ziad@aol.com', '+201277777777', Add_Type('October', 'Egypt'), '2');
+
+/*ariline agents*/
+
+/*airlines*/
+
+/*trips*/
+
+/*airports*/
+
+/*aircrafts*/
+
+/*landings*/
+
+/*tripBookings*/
+
+/*hotels*/
+
+/*rooms*/
+
+/*roomReservations*/
+
+/*vehicles*/
+
+/*vehicleRentals*/
