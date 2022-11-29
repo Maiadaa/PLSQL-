@@ -48,6 +48,7 @@ CREATE OR REPLACE TYPE room_type IS OBJECT (
     room_id int, 
     price FLOAT,
     room_num  INT,
+    status varchar(20),
     found_in REF hotel_type
 );
 
@@ -127,11 +128,13 @@ CREATE OR REPLACE TYPE user_vehicle_type  AS OBJECT(
     total_price FLOAT
 );
 
+
 /**** TABLES ****/
 
 CREATE TABLE user_tbl OF user_type(
     CONSTRAINT user_pk PRIMARY KEY(person_id)
 );
+
 CREATE TABLE manager OF manager_type(
     CONSTRAINT manager_pk PRIMARY KEY(person_id)
 );
@@ -208,6 +211,7 @@ CREATE TABLE vehicleRental OF user_vehicle_type(
 /**** INSERTIONS ****/
 
 /* USERS */
+
 Insert Into User_tbl Values ('1', Name_Type('Maiada', 'Khaled'), 'F', 'maiada@aol.com', '+201010101010', Add_Type('newCairo', 'Egypt'), '1111 1111');
 INSERT INTO User_tbl VALUES ('2', name_type('Karim', 'Mohsen'), 'M', 'karim@yahoo.com', '+201111111111', add_type('Alex', 'Egypt'), '5555 5555');
 
@@ -336,13 +340,13 @@ from Hotel_Agent hotelAgent where hotelAgent.person_id = 7;
 
 /* ROOMS */
 
-INSERT INTO room select (room_type(1, 2000, 110, ref(Hotel)))
+INSERT INTO room select (room_type(1, 2000, 110, 'NotAvailable', ref(Hotel)))
 from hotel Hotel where Hotel.hotel_id = 2001;
 
-INSERT INTO room select (room_type(2, 1500, 120, ref(Hotel)))
+INSERT INTO room select (room_type(2, 1500, 120, 'NotAvailable', ref(Hotel)))
 from hotel Hotel where Hotel.hotel_id = 2002;
 
-INSERT INTO room select (room_type(3, 2200, 130, ref(Hotel)))
+INSERT INTO room select (room_type(3, 2200, 130, 'Available', ref(Hotel)))
 from hotel Hotel where Hotel.hotel_id = 2002;
 
 
@@ -375,18 +379,7 @@ from User_tbl UserV , vehicle VehicleV
 where UserV.person_id = '2' and VehicleV.plate_num = 'NSB827';
 
 
-
 /**** FUNCTIONS ****/
-/* MAIADA */
-
-/* MAHMOUD */
-
-/* ABDELRAHMAN */
-
-/* MOHAMED */
-
-
-/**** PROCEDURES ****/
 /* MAIADA */
 
 /* MAHMOUD */
@@ -424,14 +417,59 @@ begin
     when DUP_VAL_ON_INDEX  then dbms_output.put_line('error');
 
 end;
-
 /* MOHAMED */
 
 
-/**** CALLIING BLOCK ****/
-Begin
- /*call functions/procedures here*/
- /* e.g. bookRoom(); */
- 
-END;
+/**** PROCEDURES ****/
+/* MAIADA */
+
+/* MAHMOUD */
+
+/* ABDELRAHMAN */
+
+create or replace function Room_Booking(userid number, hotelid int, enterdate varchar, leavedate varchar, days number, totalPrice float) return roomReservation
+is
+    cursor rooms is select * from room;
+    curr_rec rooms%rowtype;
+    hotel hotel_type;
+begin
+    
+    open rooms;
+        loop fetch rooms into curr_rec;
+        exit when rooms%notfound;
+        select deref(found_in) into hotel from room where room_id = curr_rec.room_id;
+          if hotel.hotel_id = hotelid
+            then if curr_rec.status = 'Available'
+                then INSERT INTO roomReservation SELECT (user_room_type(ref(UserT),ref(RoomT), enterdate , leavedate, days , totalPrice))
+                    from User_tbl UserT , room RoomT where UserT.person_id = userid and RoomT.room_id = curr_rec.room_id;
+                    return select * from roomReservation where 
+                end if;
+          end if;
+        end loop;
+    close rooms;
+    return 'end';
+end;
+
+declare
+sss varchar(20);
+begin
+sss := Room_Booking(1,2001);
+dbms_output.put_line(sss);
+end;
+                      
+open bookedrooms;
+                loop fetch bookedrooms into curr_rec2;
+                exit when bookedrooms%notfound;
+                    if curr_rec2.room_ref = curr_rec.room_id
+                    then exit;
+                    end if;
+                end loop;
+                close bookedrooms;
+                
+                
+              
+select room_id from room where room_id not in (select deref(room_ref).room_id from roomReservation)
+                
+drop procedure Add_Hotel;
+drop function Room_Booking;
 
