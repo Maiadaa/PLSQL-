@@ -336,11 +336,43 @@ from Hotel_Agent hotelAgent where hotelAgent.person_id = 7;
 
 /* ROOMS */
 
+INSERT INTO room select (room_type(1, 2000, 110, ref(Hotel)))
+from hotel Hotel where Hotel.hotel_id = 2001;
+
+INSERT INTO room select (room_type(2, 1500, 120, ref(Hotel)))
+from hotel Hotel where Hotel.hotel_id = 2002;
+
+INSERT INTO room select (room_type(3, 2200, 130, ref(Hotel)))
+from hotel Hotel where Hotel.hotel_id = 2002;
+
+
 /* ROOM RESERVATIONS */
+
+INSERT INTO roomReservation SELECT (user_room_type(ref(UserT),ref(RoomT), '22/10/2022' , '30/10/2022' , 7 , 14000))
+from User_tbl UserT , room RoomT
+where UserT.person_id = '1' and RoomT.room_id = '2';
+
+INSERT INTO roomReservation SELECT (user_room_type(ref(UserT),ref(RoomT), '5/11/2022' , '7/11/2022' , 2 , 3000))
+from User_tbl UserT , room RoomT
+where UserT.person_id = '2' and RoomT.room_id = '1';
 
 /* VEHICLES */
 
+INSERT INTO vehicle select (vehicle_type('ARG126' , 'Hyundai Accent' , 'Red' , 2015 , 3000, ref(VehicleAgent)))
+from vehicle_agent VehicleAgent where VehicleAgent.person_id= 7;
+
+INSERT INTO vehicle select (vehicle_type('NSB827' , 'Mitsubishi Lancer' , 'Black' , 2018 , 4000, ref(VehicleAgent)))
+from vehicle_agent VehicleAgent where VehicleAgent.person_id= 8;
+
 /* VEHICLE RENTALS */
+
+INSERT INTO vehicleRental SELECT (user_vehicle_type(ref(UserV),ref(VehicleV), 145326 , 3 , 9000))
+from User_tbl UserV , vehicle VehicleV
+where UserV.person_id = '1' and VehicleV.plate_num = 'ARG126';
+
+INSERT INTO vehicleRental SELECT (user_vehicle_type(ref(UserV),ref(VehicleV), 126987 , 5 , 20000))
+from User_tbl UserV , vehicle VehicleV
+where UserV.person_id = '2' and VehicleV.plate_num = 'NSB827';
 
 
 
