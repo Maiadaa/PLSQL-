@@ -688,6 +688,47 @@ begin
     then return( 'no hotel found');
 end;
 
+/* MOHAMED */
+/* MANAGE AIRLINE FUNCTION */
+CREATE OR REPLACE FUNCTION manage_airline (airlineName varchar , airlineType varchar , airlineEmail varchar)
+
+RETURN int
+
+IS 
+
+airlineFound VARCHAR(20);
+
+BEGIN 
+
+SELECT airline_name INTO airlineFound 
+FROM airline
+WHERE airline_name = airlineName;
+
+IF (airlineFound = airlineName)
+	THEN 
+		UPDATE airline
+
+            SET
+
+            airline_name = airlineName,
+            airline_type = airlineType,
+            email = airlineEmail
+
+            WHERE airline_name = airlineName;
+
+            Dbms_Output.Put_Line('The airline '|| airlineName || ' is updated successfully');
+
+RETURN 1;
+
+ELSE 
+	Dbms_Output.Put_Line('The airline is not available');
+RETURN 0;
+END IF;
+
+END;
+/* END OF FUNCTION */
+
+
 /**** CALLIING BLOCK ****/
 /* 1. MAIADA :: add_airline Procedure */
 Declare 
@@ -696,26 +737,40 @@ Begin
 
 END;
 
-/* 2. FAHMY :: manage_airline function */
+/* 2. MOHAMED :: manage_airline function */
 Declare 
-
+airlineName varchar(20);
+airlineType varchar(20);
+airlineEmail varchar(30);
+RESULT int;
 Begin
-
+RESULT:=manage_airline('Alaska','Private','Alaska@air.com');
 END;
 
-/* 3. FAHMY :: add_airport procedure */
-Declare 
+/*Query for testing*/
+select * from airline;
 
+/* 3. MOHAMED :: add_aircraft procedure */
+Declare
+craft_num int;
+model_name varchar(20);
+model_year int;
+manifacturer varchar(20);
+capacity int;
+belong_to varchar(20);
 Begin
+Add_Aircraft (10 ,'Traveler', 2020, 'Aeroncaaa', 300 , 'Egyptair');
+end;
 
-End;
-
-/* 4. FAHMY:: add_aircraft procedure */
-Declare 
-
+/* 4. MOHAMED:: add_airport procedure */
+Declare
+city varchar(20);
+country varchar(20);
+name varchar(20);
+code varchar(20);
 Begin
-
-End;
+Add_Airport ('Dubai' ,'UAE', 'Dubai Airport', 'UAE-1');
+end;
 
 /* 5. MAIADA :: viewTripsAvail procedure*/
 Begin 
