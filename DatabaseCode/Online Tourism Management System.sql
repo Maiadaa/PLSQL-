@@ -672,6 +672,12 @@ End;
 Begin 
   Viewtripsavail();
 End;
+/* Query for testing purposes */
+Select t.trip_id, t.class_Type, t.departure_loc, t.destination_loc, t.departure_time, t.arrival_time, t.trip_fare, a.airline_name
+From Trip T, Airline A 
+Where A.Airline_Name = T.Offered_By.Airline_Name 
+AND a.Phone_Num = t.offered_by.phone_num ;
+
 
 /* 6. MAIADA :: Bookflightticket function*/
 Declare 
@@ -686,7 +692,9 @@ Begin
   Dbms_Output.Put_Line('Your flight seat number is: ' || Flightseat || '.');
 End;
 /* Query for testing purposes */
-SELECT * FROM tripBooking;
+Select U.Person_Id, P.Trip_Id, B.Seat_Num 
+From Tripbooking B, User_Tbl U, Trip P
+WHERE u.person_id = b.user_ref.person_id AND p.trip_id = b.trip_ref.trip_id;
 
 /* 7. HAGRASS :: Add_hotel procedure */
 Declare 
