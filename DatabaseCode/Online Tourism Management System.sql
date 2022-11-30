@@ -692,6 +692,10 @@ sss := Room_Booking(1,2003, '2/12/2023', '12/2/2024', 15, 5000);
 dbms_output.put_line(sss);
 end;
 
+select * from room;
+
+select * from roomReservation;
+
 /* 8. HAGRASS :: Manage_hotel function */
 Declare 
 
