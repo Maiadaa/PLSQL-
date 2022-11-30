@@ -421,6 +421,7 @@ begin
                                     /*insert*/
                                     insert into hotel select (hotel_type(hotel_id, rating, phone_num, hotel_name, add_type(city, country), ref(hotelAgent)))
                                     from Hotel_Agent hotelAgent where hotelAgent.person_id = managed_by;
+                                    dbms_output.put_line('hotel inserted');
                                     /*end*/
                             else dbms_output.put_line('managed by must not be empty');
                             end if;
@@ -438,7 +439,6 @@ begin
     end if;
     exception 
     when DUP_VAL_ON_INDEX  then dbms_output.put_line('error');
-
 end;
 /* MOHAMED */
 
@@ -593,44 +593,41 @@ End;
 
 /* ABDELRAHMAN */
 
-create or replace function Room_Booking(userid number, hotelid int, enterdate varchar, leavedate varchar, days number, totalPrice float) return user_room_type
+create or replace function Room_Booking(userid number, hotelid int, enterdate varchar, leavedate varchar, days number, totalPrice float) return varchar
 is
     cursor rooms is select * from room;
     curr_rec rooms%rowtype;
     hotel hotel_type;
+    hotel_ID int := 0;
     reservation roomReservation%rowtype;
+    HotelWithinTheSystem exception;
 begin
-    open rooms;
-        loop fetch rooms into curr_rec;
-        exit when rooms%notfound;
-        select deref(found_in) into hotel from room where room_id = curr_rec.room_id;
-          if hotel.hotel_id = hotelid
-            then if curr_rec.status = 'Available'
-                then INSERT INTO roomReservation SELECT (user_room_type(ref(userid2),ref(room_ID), enterdate , leavedate, days , totalPrice))
-                    from User_tbl userid2 , room room_ID where userid2.person_id = userid and room_ID.room_id = curr_rec.room_id;
-                    update room set status = 'NotAvailable' where room_id = curr_rec.room_id;
-                    
-                    return reservation;
-                end if;
-          end if;
-        end loop;
-    close rooms;
-    return 'this hotel not exits';
+    select count(hotel_id) into hotel_ID from hotel Hotel where Hotel.hotel_id = hotelid;
+    if hotel_ID > 0
+    then
+        open rooms;
+            loop fetch rooms into curr_rec;
+            exit when rooms%notfound;
+            select deref(found_in) into hotel from room where room_id = curr_rec.room_id;
+              if hotel.hotel_id = hotelid
+                then if curr_rec.status = 'Available'
+                    then INSERT INTO roomReservation SELECT (user_room_type(ref(userid2),ref(room_ID), enterdate , leavedate, days , totalPrice))
+                        from User_tbl userid2 , room room_ID where userid2.person_id = userid and room_ID.room_id = curr_rec.room_id;
+                        update room set status = 'NotAvailable' where room_id = curr_rec.room_id;
+                        return 'room allocated to the customer';
+                    end if;
+              end if;
+            end loop;
+        close rooms;
+        return 'there is no rooms available';
+    else raise HotelWithinTheSystem;
+    end if;
+    exception
+    when HotelWithinTheSystem 
+    then return( 'no hotel found');
 end;
+
 /**** CALLIING BLOCK ****/
-
-declare
-sss varchar(1000);
-begin
-sss := Room_Booking(1,2002, '2/12/2023', '12/2/2024', 15, 5000);
-dbms_output.put_line(sss);
-end;
-
-select * from roomReservation
-
-select * from room
-
-
 /* 1. MAIADA :: add_airline Procedure */
 Declare 
 
@@ -688,11 +685,12 @@ From Tripbooking B, User_Tbl U, Trip P
 WHERE u.person_id = b.user_ref.person_id AND p.trip_id = b.trip_ref.trip_id;
 
 /* 7. HAGRASS :: Add_hotel procedure */
-Declare 
-
-Begin
-
-End;
+declare
+sss varchar(1000);
+begin
+sss := Room_Booking(1,2003, '2/12/2023', '12/2/2024', 15, 5000);
+dbms_output.put_line(sss);
+end;
 
 /* 8. HAGRASS :: Manage_hotel function */
 Declare 
