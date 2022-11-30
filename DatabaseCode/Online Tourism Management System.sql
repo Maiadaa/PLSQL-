@@ -593,52 +593,43 @@ End;
 
 /* ABDELRAHMAN */
 
-create or replace function Room_Booking(userid number, hotelid int, enterdate varchar, leavedate varchar, days number, totalPrice float) return roomReservation
+create or replace function Room_Booking(userid number, hotelid int, enterdate varchar, leavedate varchar, days number, totalPrice float) return user_room_type
 is
     cursor rooms is select * from room;
     curr_rec rooms%rowtype;
     hotel hotel_type;
+    reservation roomReservation%rowtype;
 begin
-    
     open rooms;
         loop fetch rooms into curr_rec;
         exit when rooms%notfound;
         select deref(found_in) into hotel from room where room_id = curr_rec.room_id;
           if hotel.hotel_id = hotelid
             then if curr_rec.status = 'Available'
-                then INSERT INTO roomReservation SELECT (user_room_type(ref(UserT),ref(RoomT), enterdate , leavedate, days , totalPrice))
-                    from User_tbl UserT , room RoomT where UserT.person_id = userid and RoomT.room_id = curr_rec.room_id;
-                    return select * from roomReservation where 
+                then INSERT INTO roomReservation SELECT (user_room_type(ref(userid2),ref(room_ID), enterdate , leavedate, days , totalPrice))
+                    from User_tbl userid2 , room room_ID where userid2.person_id = userid and room_ID.room_id = curr_rec.room_id;
+                    update room set status = 'NotAvailable' where room_id = curr_rec.room_id;
+                    
+                    return reservation;
                 end if;
           end if;
         end loop;
     close rooms;
-    return 'end';
+    return 'this hotel not exits';
 end;
+/**** CALLIING BLOCK ****/
 
 declare
-sss varchar(20);
+sss varchar(1000);
 begin
-sss := Room_Booking(1,2001);
+sss := Room_Booking(1,2002, '2/12/2023', '12/2/2024', 15, 5000);
 dbms_output.put_line(sss);
 end;
-                      
-open bookedrooms;
-                loop fetch bookedrooms into curr_rec2;
-                exit when bookedrooms%notfound;
-                    if curr_rec2.room_ref = curr_rec.room_id
-                    then exit;
-                    end if;
-                end loop;
-                close bookedrooms;
-                
-                
-select room_id from room where room_id not in (select deref(room_ref).room_id from roomReservation)
-                
-drop procedure Add_Hotel;
-drop function Room_Booking;
 
-/**** CALLIING BLOCK ****/
+select * from roomReservation
+
+select * from room
+
 
 /* 1. MAIADA :: add_airline Procedure */
 Declare 
