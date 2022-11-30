@@ -541,7 +541,6 @@ Begin
     Else 
       if (Ctype = 'B' AND Latestseat < 28) /* capacity of the business class is 28 seats on any plane */
         Then 
-        dbms_output.put_line('Hey')
           Seat := Latestseat + 1;
         Else 
           if (Ctype = 'E' AND latestSeat < 100) /* capacity of economy class should be the remaining number of plane's capacity, but for now it'll be considered as, say 100 seats*/ 
@@ -556,11 +555,10 @@ Begin
     /* check if user already exists first, if not register him */
     Select Case When Exists (Select 1  
                               From User_Tbl 
-                              Where User_Tbl.Person_Id = '1' And Rownum = 1)
+                              Where User_Tbl.Person_Id = userr.person_id And Rownum = tripNum)
                 Then 1
                 Else 0
-           End As user_existance 
-           Into User_Exists
+           End  Into User_Exists
     From Dual;
     
     If (user_exists <> 1)
