@@ -407,6 +407,48 @@ End;
 
 /* MAHMOUD */
 
+/* Create or Add Vehicle */
+
+CREATE OR REPLACE PROCEDURE add_vehicle(pnum varchar , mname varchar , color varchar , myear int , rprice float, mby int )
+IS
+counter int := 0;
+BEGIN
+
+select count (person_id)
+from vehicle_agent
+where person_id = mby;
+
+if rprice > 0 and pnum IS NOT NULL and counter > 0
+then
+
+INSERT INTO vehicle select vehicle_type(pnum, mname, color, myear, rprice, ref(ag))
+from vehicle_agent ag
+where ag.person_id = mby;
+dbms_output.put_line('Vehicle added successfully');
+
+else
+dbms_output.put_line('Wrong Inputs');
+end if;
+
+END;
+/* End of Procedure */
+
+/* CALLING BLOCK */
+
+declare 
+platenum varchar(6) := 'GGG123';
+mname varchar(20):= 'Hassouna' ;
+color varchar(20):= 'Blue';
+modelYear int:= 2019;
+rPrice float:= 450.50;
+
+BEGIN
+add_vehicle(platenum,mname,color,modelYear,rPrice,7);
+END;
+
+
+/* End of calling block */
+
 /* ABDELRAHMAN */
 create or replace NONEDITIONABLE procedure Add_Hotel (hotel_id int, rating FLOAT, phone_num VARCHAR, hotel_name VARCHAR, city VARCHAR, country VARCHAR, managed_by number)is
 begin
@@ -590,6 +632,54 @@ Begin
 End;
 
 /* MAHMOUD */
+/* Vehicle Booking Function */
+CREATE OR REPLACE FUNCTION vehicle_booking (customerID int, vehicleID varchar, rental_days int, lic_number int)
+RETURN float
+IS
+counter int;
+total_price float;
+carPrice float;
+BEGIN
+
+select count (plate_num) into counter
+from vehicle
+where plate_num = vehicleID;
+
+if (counter > 0)
+then 
+
+select rental_price into carPrice
+from vehicle
+where plate_num = vehicleID;
+
+total_price := carPrice * rental_days;
+
+insert into vehicleRental select (user_vehicle_type(ref(u),ref(v),lic_number,rental_days,total_price)) 
+from vehicle v , user_tbl u
+where u.person_id = customerID and v.plate_num = vehicleID;
+    dbms_output.put_line(' vehicle rented successfully ');
+    return total_price;
+else 
+    total_price := 0;
+    dbms_output.put_line(' vehicle not found ');
+end if;
+return total_price;
+END;
+/* End of function */
+
+/* CALLING BLOCK */
+
+declare
+price float;
+begin
+price := vehicle_booking(2,'m7amad',4,80);
+dbms_output.put_line(price);
+end;
+
+
+select * from vehicleRental;
+select * from vehicle;
+/* End of calling block */
 
 /* ABDELRAHMAN */
 
@@ -728,5 +818,6 @@ Declare
 Begin
 
 End;
+
 
 
