@@ -555,7 +555,7 @@ Begin
     /* check if user already exists first, if not register him */
     Select Case When Exists (Select 1  
                               From User_Tbl 
-                              Where User_Tbl.Person_Id = userr.person_id And Rownum = tripNum)
+                              Where User_Tbl.Person_Id = userr.person_id)
                 Then 1
                 Else 0
            End  Into User_Exists
