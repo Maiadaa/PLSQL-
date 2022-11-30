@@ -211,7 +211,6 @@ CREATE TABLE vehicleRental OF user_vehicle_type(
 /**** INSERTIONS ****/
 
 /* USERS */
-
 Insert Into User_tbl Values ('1', Name_Type('Maiada', 'Khaled'), 'F', 'maiada@aol.com', '+201010101010', Add_Type('newCairo', 'Egypt'), '1111 1111');
 INSERT INTO User_tbl VALUES ('2', name_type('Karim', 'Mohsen'), 'M', 'karim@yahoo.com', '+201111111111', add_type('Alex', 'Egypt'), '5555 5555');
 
@@ -381,6 +380,30 @@ where UserV.person_id = '2' and VehicleV.plate_num = 'NSB827';
 
 /**** PROCEDURES ****/
 /* MAIADA */
+Create Or Replace Procedure Viewtripsavail Is 
+Cursor trips Is
+Select * From Trip;
+Curr_Trip Trips%Rowtype;
+Airlinecompany Airline_Type;
+
+BEGIN
+Open Trips;
+  Loop Fetch Trips Into Curr_Trip;
+  Exit When Trips%Notfound;
+  
+  Select deref(offered_by) Into Airlinecompany
+  From Trip 
+  WHERE trip.trip_id = curr_trip.trip_id;
+  
+  Dbms_Output.Put_Line('Trip #'|| curr_trip.trip_id || ' offered by: ' || Airlinecompany.Airline_Name);
+  Dbms_Output.Put_Line('Departures from: ' || Curr_Trip.Departure_Loc || ' ariport ' || Chr(9) || 'at: ' || Curr_Trip.Departure_Time);
+  Dbms_Output.Put_Line('Arrives at: ' || Curr_Trip.Destination_Loc || ' airport ' || Chr(9) || 'at: ' || Curr_Trip.Arrival_Time);
+  Dbms_Output.Put_Line('Ticket costs: ' || Curr_Trip.Trip_Fare || ' for: ' || Curr_Trip.Class_Type || ' class');
+  Dbms_Output.New_Line;
+
+  END LOOP;
+Close Trips;
+End;
 
 /* MAHMOUD */
 
@@ -475,6 +498,98 @@ end;
 
 /**** FUNCTIONS ****/
 /* MAIADA */
+Create Or Replace Function Bookflightticket(Userr User_Type, Tripnum Int) Return Int Is
+Tid Int;
+Ctype Char; 
+Deploc Varchar(5);
+Desloc Varchar(5);
+Deptime Varchar(8);
+ArrTime Varchar(8);
+fare FLOAT;
+Airline Airline_Type;
+Chosentrip Trip_Type;
+user_exists NUMBER(1);
+Latestseat Int;
+Seat Int;
+fully_booked EXCEPTION;
+
+Begin
+  /* check if trip exists first,  if not NO_DATA_FOUND will be raised */
+  /*                              if yes get its details              */
+  Select Trip_Id, 
+          Class_Type, 
+          Departure_Loc, 
+          Destination_Loc, 
+          Departure_Time, 
+          Arrival_Time, 
+          Trip_Fare, 
+          Deref(Offered_By) 
+          Into tID,Ctype, depLoc, desLoc, depTime, ArrTime, fare , airline
+  From Trip
+  Where Trip.Trip_Id = Tripnum;
+  
+  /* Retreive the last seat reserved in this trip */ 
+  Select Max(B.Seat_Num)Into Latestseat
+  From Tripbooking B, Trip T 
+  Where T.Trip_Id = Tripnum;
+  
+  /* Assign him the next seat number, but make sure there is a seat available */
+  /* a seat is avail if seat number didn't exceed the class_type's capacity*/ 
+  If (Ctype = 'F' AND Latestseat < 12) /* capacity for the first class is 12 seats on any plane */
+    Then 
+      Seat := Latestseat + 1;
+    Else 
+      if (Ctype = 'B' AND Latestseat < 28) /* capacity of the business class is 28 seats on any plane */
+        Then 
+        dbms_output.put_line('Hey')
+          Seat := Latestseat + 1;
+        Else 
+          if (Ctype = 'E' AND latestSeat < 100) /* capacity of economy class should be the remaining number of plane's capacity, but for now it'll be considered as, say 100 seats*/ 
+          Then 
+            Seat := Latestseat + 1;
+          Else
+            RAISE fully_booked;
+          End If;
+        END IF;
+    End If;
+    
+    /* check if user already exists first, if not register him */
+    Select Case When Exists (Select 1  
+                              From User_Tbl 
+                              Where User_Tbl.Person_Id = '1' And Rownum = 1)
+                Then 1
+                Else 0
+           End As user_existance 
+           Into User_Exists
+    From Dual;
+    
+    If (user_exists <> 1)
+      Then 
+        Insert Into User_Tbl Values(Userr.Person_Id, Name_Type(Userr.Person_Name.Fname, Userr.Person_Name.Lname), Userr.Gender, Userr.Email, Userr.Phone_Num, Add_Type(Userr.Address.City, Userr.Address.Country), userr.credit_card_num);
+    End If;
+    
+    /* Add this new booking to the database */
+    Insert Into Tripbooking 
+    Select User_Trip_Type(Seat, Ref(U), Ref(T))
+    From Trip t, user_tbl u
+    Where T.Trip_Id = Tripnum
+    And U.Person_Id = Userr.Person_Id;
+    
+    Dbms_Output.Put_Line('Your chosen trip was booked successfully.');
+    Dbms_Output.Put_Line('Ticket costs: $' || Fare || '.');
+    Return Seat;
+  
+    Exception 
+      When Fully_Booked
+        Then 
+          Dbms_Output.Put_Line('Sorry this trip is fully booked');
+      When No_Data_Found 
+        THEN 
+          dbms_output.put_line('No such trip!'); 
+      When Others 
+        Then 
+          dbms_output.put_line('Error in BookFlightTicket Function!'); 
+End;
 
 /* MAHMOUD */
 
@@ -520,9 +635,101 @@ open bookedrooms;
                 close bookedrooms;
                 
                 
-              
 select room_id from room where room_id not in (select deref(room_ref).room_id from roomReservation)
                 
 drop procedure Add_Hotel;
 drop function Room_Booking;
+
+/**** CALLIING BLOCK ****/
+
+/* 1. MAIADA :: add_airline Procedure */
+Declare 
+
+Begin
+
+END;
+
+/* 2. FAHMY :: manage_airline function */
+Declare 
+
+Begin
+
+END;
+
+/* 3. FAHMY :: add_airport procedure */
+Declare 
+
+Begin
+
+End;
+
+/* 4. FAHMY:: add_aircraft procedure */
+Declare 
+
+Begin
+
+End;
+
+/* 5. MAIADA :: viewTripsAvail procedure*/
+Begin 
+  Viewtripsavail();
+End;
+
+/* 6. MAIADA :: Bookflightticket function*/
+Declare 
+Userr User_Type;
+tripNum INT;
+flightSeat Int;
+
+Begin
+  Userr:= user_type('12', Name_Type('Maiada', 'Khaled'), 'F', 'maiada@aol.com', '+201010101010', Add_Type('newCairo', 'Egypt'), '1111 1111');
+
+  flightSeat:= Bookflightticket(Userr, &tripNum);
+  Dbms_Output.Put_Line('Your flight seat number is: ' || Flightseat || '.');
+End;
+/* Query for testing purposes */
+SELECT * FROM tripBooking;
+
+/* 7. HAGRASS :: Add_hotel procedure */
+Declare 
+
+Begin
+
+End;
+
+/* 8. HAGRASS :: Manage_hotel function */
+Declare 
+
+Begin
+
+End;
+
+/* 9. HAGRASS :: room_booking function */
+Declare 
+
+Begin
+
+End;
+
+/* 10. MAHMOUD :: Add_vehicle procedure */
+Declare 
+
+Begin
+
+End;
+
+/* 11. MAHMOUD :: vehicle_booking function */ 
+Declare 
+
+Begin
+
+End;
+
+/* 12. MAIADA:: Generate_reports function */
+Declare 
+
+Begin
+
+End;
+
 
