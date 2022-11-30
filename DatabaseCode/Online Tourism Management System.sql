@@ -433,22 +433,6 @@ end if;
 END;
 /* End of Procedure */
 
-/* CALLING BLOCK */
-
-declare 
-platenum varchar(6) := 'GGG123';
-mname varchar(20):= 'Hassouna' ;
-color varchar(20):= 'Blue';
-modelYear int:= 2019;
-rPrice float:= 450.50;
-
-BEGIN
-add_vehicle(platenum,mname,color,modelYear,rPrice,7);
-END;
-
-
-/* End of calling block */
-
 /* ABDELRAHMAN */
 create or replace NONEDITIONABLE procedure Add_Hotel (hotel_id int, rating FLOAT, phone_num VARCHAR, hotel_name VARCHAR, city VARCHAR, country VARCHAR, managed_by number)is
 begin
@@ -667,19 +651,6 @@ return total_price;
 END;
 /* End of function */
 
-/* CALLING BLOCK */
-
-declare
-price float;
-begin
-price := vehicle_booking(2,'m7amad',4,80);
-dbms_output.put_line(price);
-end;
-
-
-select * from vehicleRental;
-select * from vehicle;
-/* End of calling block */
 
 /* ABDELRAHMAN */
 
@@ -801,18 +772,28 @@ Begin
 End;
 
 /* 10. MAHMOUD :: Add_vehicle procedure */
-Declare 
+declare 
+platenum varchar(6) := 'GGG123';
+mname varchar(20):= 'Hassouna' ;
+color varchar(20):= 'Blue';
+modelYear int:= 2019;
+rPrice float:= 450.50;
 
-Begin
+BEGIN
+add_vehicle(platenum,mname,color,modelYear,rPrice,7);
+END;
 
-End;
 
 /* 11. MAHMOUD :: vehicle_booking function */ 
-Declare 
+declare
+price float;
+begin
+price := vehicle_booking(2,'m7amad',4,80);
+dbms_output.put_line(price);
+end;
 
-Begin
-
-End;
+select * from vehicleRental;
+select * from vehicle;
 
 /* 12. MAIADA:: Generate_reports function */
 Declare 
