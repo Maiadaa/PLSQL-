@@ -802,14 +802,13 @@ WHERE u.person_id = b.user_ref.person_id AND p.trip_id = b.trip_ref.trip_id;
 
 /* 7. HAGRASS :: Add_hotel procedure */
 
-
-/* 8. HAGRASS :: Manage_hotel function */
 Declare 
 
 Begin
-
+Add_Hotel (2007, 4.5, '01013700', 'hagrass', 'cairo', 'egypt', 6);
 End;
 
+select * from hotel;
 /* 9. HAGRASS :: room_booking function */
 declare
 sss varchar(1000);
