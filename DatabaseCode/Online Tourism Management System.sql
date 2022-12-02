@@ -685,16 +685,7 @@ From Tripbooking B, User_Tbl U, Trip P
 WHERE u.person_id = b.user_ref.person_id AND p.trip_id = b.trip_ref.trip_id;
 
 /* 7. HAGRASS :: Add_hotel procedure */
-declare
-sss varchar(1000);
-begin
-sss := Room_Booking(1,2003, '2/12/2023', '12/2/2024', 15, 5000);
-dbms_output.put_line(sss);
-end;
 
-select * from room;
-
-select * from roomReservation;
 
 /* 8. HAGRASS :: Manage_hotel function */
 Declare 
@@ -704,11 +695,16 @@ Begin
 End;
 
 /* 9. HAGRASS :: room_booking function */
-Declare 
+declare
+sss varchar(1000);
+begin
+sss := Room_Booking(1,2002, '2/12/2023', '12/2/2024', 15, 5000);
+dbms_output.put_line(sss);
+end;
 
-Begin
+select * from room;
 
-End;
+select * from roomReservation;
 
 /* 10. MAHMOUD :: Add_vehicle procedure */
 Declare 
