@@ -745,14 +745,8 @@ END;
 
 
 /**** CALLIING BLOCK ****/
-/* 1. MAIADA :: add_airline Procedure */
-Declare 
 
-Begin
-
-END;
-
-/* 2. MOHAMED :: manage_airline function */
+/* 1. MOHAMED :: manage_airline function */
 Declare 
 airlineName varchar(20);
 airlineType varchar(20);
@@ -765,7 +759,7 @@ END;
 /*Query for testing*/
 select * from airline;
 
-/* 3. MOHAMED :: add_aircraft procedure */
+/* 2. MOHAMED :: add_aircraft procedure */
 Declare
 craft_num int;
 model_name varchar(20);
@@ -777,7 +771,7 @@ Begin
 Add_Aircraft (10 ,'Traveler', 2020, 'Aeroncaaa', 300 , 'Egyptair');
 end;
 
-/* 4. MOHAMED:: add_airport procedure */
+/* 3. MOHAMED:: add_airport procedure */
 Declare
 city varchar(20);
 country varchar(20);
@@ -787,7 +781,7 @@ Begin
 Add_Airport ('Dubai' ,'UAE', 'Dubai Airport', 'UAE-1');
 end;
 
-/* 5. MAIADA :: viewTripsAvail procedure*/
+/* 4. MAIADA :: viewTripsAvail procedure*/
 Begin 
   Viewtripsavail();
 End;
@@ -798,7 +792,7 @@ Where A.Airline_Name = T.Offered_By.Airline_Name
 AND a.Phone_Num = t.offered_by.phone_num ;
 
 
-/* 6. MAIADA :: Bookflightticket function*/
+/* 5. MAIADA :: Bookflightticket function*/
 Declare 
 Userr User_Type;
 tripNum INT;
@@ -815,15 +809,15 @@ Select U.Person_Id, P.Trip_Id, B.Seat_Num
 From Tripbooking B, User_Tbl U, Trip P
 WHERE u.person_id = b.user_ref.person_id AND p.trip_id = b.trip_ref.trip_id;
 
-/* 7. HAGRASS :: Add_hotel procedure */
+/* 6. HAGRASS :: Add_hotel procedure */
 
 Declare 
 Begin
 Add_Hotel (20010, 4.5, '01013700', 'hagrass', 'cairo', 'egypt', 6);
 End;
 
-select * from hotel;
-/* 9. HAGRASS :: room_booking function */
+Select * From Hotel;
+/* 7. HAGRASS :: room_booking function */
 declare
 sss varchar(1000);
 begin
@@ -835,7 +829,7 @@ select * from room;
 
 select * from roomReservation;
 
-/* 10. MAHMOUD :: Add_vehicle procedure */
+/* 8. MAHMOUD :: Add_vehicle procedure */
 declare 
 platenum varchar(6) := 'GGG123';
 mname varchar(20):= 'Hassouna' ;
@@ -847,7 +841,7 @@ add_vehicle(platenum,mname,color,modelYear,rPrice,100);
 END;
 
 
-/* 11. MAHMOUD :: vehicle_booking function */ 
+/* 9. MAHMOUD :: vehicle_booking function */ 
 declare
 price float;
 begin
@@ -858,9 +852,3 @@ end;
 select * from vehicleRental;
 select * from vehicle;
 
-/* 12. MAIADA:: Generate_reports function */
-Declare 
-
-Begin
-
-End;
