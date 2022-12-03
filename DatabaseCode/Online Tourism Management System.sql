@@ -813,7 +813,7 @@ WHERE u.person_id = b.user_ref.person_id AND p.trip_id = b.trip_ref.trip_id;
 
 Declare 
 Begin
-Add_Hotel (20010, 4.5, '01013700', 'hagrass', 'cairo', 'egypt', 6);
+Add_Hotel (2004, 4.5, '01013700', 'hagrass', 'cairo', 'egypt', 6);
 End;
 
 Select * From Hotel;
@@ -821,23 +821,23 @@ Select * From Hotel;
 declare
 sss varchar(1000);
 begin
-sss := Room_Booking(1,20011, '2/12/202 3:40', '12/2/2024', 15, 5000);
+sss := Room_Booking(1,2002, '2/12/202 3:440', '12/2/2024', 15, 5000);
 dbms_output.put_line(sss);
 end;
-
+select * from hotel;
 select * from room;
 
 select * from roomReservation;
 
 /* 8. MAHMOUD :: Add_vehicle procedure */
 declare 
-platenum varchar(6) := 'GGG123';
+platenum varchar(6) := 'GGG132';
 mname varchar(20):= 'Hassouna' ;
 color varchar(20):= 'Blue';
 modelYear int:= 2019;
 rPrice float:= 450.50;
 BEGIN
-add_vehicle(platenum,mname,color,modelYear,rPrice,100);
+add_vehicle(platenum,mname,color,modelYear,rPrice,7);
 END;
 
 
@@ -845,7 +845,7 @@ END;
 declare
 price float;
 begin
-price := vehicle_booking(2,'m7amad',4,80);
+price := vehicle_booking(2,'GGG132',4,880);
 dbms_output.put_line(price);
 end;
 
