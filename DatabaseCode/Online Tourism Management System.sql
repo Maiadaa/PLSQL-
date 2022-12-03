@@ -405,31 +405,38 @@ Open Trips;
 Close Trips;
 End;
 
-/* MAHMOUD */
+/* MAHMOUD /
 
 /* Create or Add Vehicle */
 
 CREATE OR REPLACE PROCEDURE add_vehicle(pnum varchar , mname varchar , color varchar , myear int , rprice float, mby int )
 IS
 counter int := 0;
+exp1 EXCEPTION;
+exp2 EXCEPTION;
 BEGIN
 
-select count (person_id)
+select count (person_id) into counter
 from vehicle_agent
 where person_id = mby;
 
-if rprice > 0 and pnum IS NOT NULL and counter > 0
+if rprice > 0 
 then
-
-INSERT INTO vehicle select vehicle_type(pnum, mname, color, myear, rprice, ref(ag))
-from vehicle_agent ag
-where ag.person_id = mby;
-dbms_output.put_line('Vehicle added successfully');
-
+    if pnum IS NOT NULL and counter > 0
+    then
+        INSERT INTO vehicle select vehicle_type(pnum, mname, color, myear, rprice, ref(ag))
+        from vehicle_agent ag
+        where ag.person_id = mby;
+        dbms_output.put_line('Vehicle added successfully');
+    else
+        raise exp2;
+    end if;
 else
-dbms_output.put_line('Wrong Inputs');
+RAISE exp1;
 end if;
-
+EXCEPTION
+WHEN exp1 THEN dbms_output.put_line('Wrong price inputs');
+WHEN exp2 THEN dbms_output.put_line('Wrong agent id');
 END;
 /* End of Procedure */
 
@@ -621,7 +628,8 @@ CREATE OR REPLACE FUNCTION vehicle_booking (customerID int, vehicleID varchar, r
 RETURN float
 IS
 counter int;
-total_price float;
+total_price float := 0.0;
+exp1 EXCEPTION;
 carPrice float;
 BEGIN
 
@@ -645,9 +653,16 @@ where u.person_id = customerID and v.plate_num = vehicleID;
     return total_price;
 else 
     total_price := 0;
-    dbms_output.put_line(' vehicle not found ');
+    RAISE exp1;
 end if;
 return total_price;
+EXCEPTION
+WHEN exp1 
+THEN 
+dbms_output.put_line(' vehicle not found ');
+return total_price;
+
+
 END;
 /* End of function */
 
@@ -803,9 +818,8 @@ WHERE u.person_id = b.user_ref.person_id AND p.trip_id = b.trip_ref.trip_id;
 /* 7. HAGRASS :: Add_hotel procedure */
 
 Declare 
-
 Begin
-Add_Hotel (2007, 4.5, '01013700', 'hagrass', 'cairo', 'egypt', 6);
+Add_Hotel (20010, 4.5, '01013700', 'hagrass', 'cairo', 'egypt', 6);
 End;
 
 select * from hotel;
@@ -813,7 +827,7 @@ select * from hotel;
 declare
 sss varchar(1000);
 begin
-sss := Room_Booking(1,2002, '2/12/2023', '12/2/2024', 15, 5000);
+sss := Room_Booking(1,20011, '2/12/202 3:40', '12/2/2024', 15, 5000);
 dbms_output.put_line(sss);
 end;
 
@@ -828,9 +842,8 @@ mname varchar(20):= 'Hassouna' ;
 color varchar(20):= 'Blue';
 modelYear int:= 2019;
 rPrice float:= 450.50;
-
 BEGIN
-add_vehicle(platenum,mname,color,modelYear,rPrice,7);
+add_vehicle(platenum,mname,color,modelYear,rPrice,100);
 END;
 
 
@@ -851,6 +864,3 @@ Declare
 Begin
 
 End;
-
-
-
